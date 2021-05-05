@@ -1,4 +1,4 @@
-# BFMC - Wanderer
+# ADS - BFMC
 Autonomous driving systems for BFMC.
 
 ## Detection example
