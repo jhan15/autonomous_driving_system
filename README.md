@@ -1,6 +1,9 @@
 # BFMC - Wanderer
 Autonomous driving systems for BFMC.
 
+## Detection example
+![alt text](https://github.com/Jianming-Han/Autonomou-driving-systems/blob/master/detection_example.png?raw=true)
+
 ## 1. Hierarchy overview
 
     ~/Documents
