@@ -1,5 +1,5 @@
 # ADS - BFMC
-Autonomous driving systems for BFMC.
+Autonomous driving systems for BFMC competition.
 
 ## Detection example
 ![alt text](https://github.com/Jianming-Han/Autonomou-driving-systems/blob/master/detection_example.png?raw=true)
