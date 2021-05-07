@@ -2,7 +2,7 @@
 Autonomous driving systems for BFMC competition.
 
 ## Detection example
-![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o1.png)
+![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o1.png | width=100)
 ![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o2.png)
 ![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o3.png)
 
