@@ -2,7 +2,7 @@
 Autonomous driving systems for BFMC competition.
 
 ## Detection example
-![alt text](https://github.com/Jianming-Han/Autonomou-driving-systems/blob/master/detection_example.png?raw=true)
+![alt text](https://github.com/Jianming-Han/Autonomou-driving-systems/blob/master/detection_example.png)
 
 ## 1. Hierarchy overview
 
