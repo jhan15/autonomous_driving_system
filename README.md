@@ -2,11 +2,10 @@
 Autonomous driving systems for BFMC competition.
 
 ## Detection example
-<img width="300" alt="o1" src="https://user-images.githubusercontent.com/62132206/117426650-6a2dc500-af24-11eb-8105-a3ff8c72687a.png">
+<img width="603" alt="o1" src="https://user-images.githubusercontent.com/62132206/117426738-8c274780-af24-11eb-8214-354e22ccf3e9.png">
+<img width="595" alt="o2" src="https://user-images.githubusercontent.com/62132206/117426748-8fbace80-af24-11eb-92e2-6cf1c9193000.png">
+<img width="587" alt="o3" src="https://user-images.githubusercontent.com/62132206/117426751-90ebfb80-af24-11eb-97da-4b6d0e596f27.png">
 
-![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o1.png | width=100)
-![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o2.png)
-![alt text](https://github.com/jhan15/autonomous_driving_systems/blob/master/images/o3.png)
 
 ## 1. Hierarchy overview
 
