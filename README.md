@@ -1,7 +1,7 @@
 # ADS - BFMC
 Autonomous driving systems for BFMC competition.
 
-## Detection example
+## ADS examples
 ![g1](https://user-images.githubusercontent.com/62132206/117566204-93ca2600-b0b5-11eb-859a-af17486b5f4e.gif)
 ![g2](https://user-images.githubusercontent.com/62132206/117566206-9593e980-b0b5-11eb-9cd2-c645f6e37c4a.gif)
 ![g3](https://user-images.githubusercontent.com/62132206/117566209-97f64380-b0b5-11eb-9889-13fcd7480040.gif)
