@@ -4,15 +4,15 @@ Autonomous driving systems for BFMC competition. It's developed on a 1:10 scalin
 ## Demo
 ![ads1](https://user-images.githubusercontent.com/62132206/121524593-becad100-c9f7-11eb-96ff-b69331704710.gif)
 
-# System setup
-## 1. Hierarchy overview
+## System setup
+### 1. Hierarchy overview
 
     ~/Documents
         |__ bfmc_workspace
         |__ startup_workspace
         |__ python3_ws
 
-## 2. Installation
+### 2. Installation
 
 #### Install basic Python3 packages and virtual environment
     
@@ -52,7 +52,7 @@ Autonomous driving systems for BFMC competition. It's developed on a 1:10 scalin
     $ catkin_make -DPYTHON_EXECUTABLE:FILEPATH=/home/<user>/Documents/python3_ws/py3venv/bin/python
     $ source devel/setup.bash
 
-## 3. Launch
+### 3. Launch
 
     # put below line as first line of each .py file
     #!/usr/bin/env python
