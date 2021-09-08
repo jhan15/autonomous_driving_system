@@ -57,6 +57,7 @@ class TLcolor:
             mask.append(cv2.inRange(hsv_image, lr, up))
         mask = sum(mask)
         seg_image = cv2.bitwise_and(hsv_image, hsv_image, mask=mask)
+        # bgr_seg_image = cv2.cvtColor(seg_image, cv2.COLOR_HSV2BGR)
 
         h = seg_image.T[0].copy()
         v = seg_image.T[2].copy()
