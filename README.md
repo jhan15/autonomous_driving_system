@@ -1,5 +1,5 @@
 # ADS - BFMC
-Autonomous driving systems for BFMC competition. It's developed on a 1:10 scaling car and tested in ROS.
+Autonomous driving systems developed on a 1:10 scaling car and tested in ROS.
 
 ## Demo
 ![ads1](https://user-images.githubusercontent.com/62132206/121524593-becad100-c9f7-11eb-96ff-b69331704710.gif)
