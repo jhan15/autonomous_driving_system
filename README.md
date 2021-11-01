@@ -4,7 +4,7 @@ Autonomous driving systems developed on a 1:10 scaling car and tested in ROS.
 ## Demo
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/62132206/139712662-ea3d87d7-a312-4bd8-9be8-56534e74adb9.gif?raw=true" width="500">
+  <img src="https://user-images.githubusercontent.com/62132206/139712662-ea3d87d7-a312-4bd8-9be8-56534e74adb9.gif?raw=true" width="600">
 </p>
 
 ## System setup
