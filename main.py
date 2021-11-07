@@ -240,29 +240,16 @@ def lk_data_thread(name):
 
 
 # [2] Thread for object detection
-pedestrian = False
-stop_sign = False
-tl_signal = None
-parking_sign = False
-crosswalk_sign = False
-priority_sign = False
-roundabout_sign = False
-
+obj_signals = None
+obj_heights = None
+tf_signal = None
 sign_text = ''
-
 
 def od_data_thread(name):
     global od_image
-    global speed
-    global pedestrian
-    global stop_sign
-    global tl_signal
-    global parking_sign
-    global lk_image
-    global turnon_lk
-    global crosswalk_sign
-    global priority_sign
-    global roundabout_sign
+    global obj_signals
+    global obj_heights
+    global tf_signal
 
     while 1:
         if turnon_lk:
@@ -270,8 +257,7 @@ def od_data_thread(name):
         else:
             sender3.send([cam.getImage(), speed])
         
-        crosswalk_sign, pedestrian, priority_sign, roundabout_sign, \
-        stop_sign, tl_signal, parking_sign, od_image = receiver4.recv()
+        obj_signals, obj_heights, tf_signal, od_image = receiver4.recv()
 
 
 cur_node = 0
@@ -361,11 +347,42 @@ _thread.start_new_thread(localize_thread, ('Thread-3', 20))
 _thread.start_new_thread(gps_path_follow, ('Thread-4', 5))      
 
 
+def cal_depth(m1, m2, yaw_flag, e=math.pi/4):
+    if yaw_flag == 1:
+        delta = abs(m2[1] - m1[1])
+    if yaw_flag == 2:
+        delta = abs(m2[2] - m1[2])
+
+    return delta / (m2[0]/m1[0] - 1)
+
+def check_yaw(yaw, e=math.pi/6):
+    if -e < yaw < e or yaw > math.pi - e or yaw < -math.pi + e:
+        return 1
+    if math.pi/2 - e < yaw < math.pi/2 + e or -math.pi/2 - e < yaw < -math.pi/2 + e:
+        return 2
+    else:
+        return None
+
+
+# depth variables
+motion_old = [None] * 7
+motion_new = [None] * 7
+# depths_his = [None] * 7
+depths = [math.inf] * 7
+updates = [True] * 7
+tics = [None] * 7
+free_time = False
+t = None
+depth_threshold = 0.4
+depth_threshold2 = 0.8
+depth_threshold3 = 1.0
+crosswalk = False
+
+
 # [0] Main thread
 while 1:
     # print ('---------------------------------------------------')
-    sign_text = ''
-    speed = 0.3
+    # speed = 0.3
 
     turnon_lk = True
     
@@ -403,43 +420,117 @@ while 1:
     # print('current speed: {}'.format(speed))
     image_copy = od_image
 
+    yaw_flag = check_yaw(bno.getYaw())
+    
+    if not free_time and obj_heights and yaw_flag:
+        for i in range(len(obj_heights)):
+            if obj_heights[i]:
+                if updates[i]:
+                    motion_old[i] = [obj_heights[i], my_position['x'], my_position['y']]
+                    updates[i] = False
+                    tics[i] = time()
+                if not updates[i] and time() - tics[i] > 0.25:
+                    updates[i] = True
+                    if obj_heights[i] and obj_heights[i] > motion_old[i][0]:
+                        motion_new[i] = [obj_heights[i], my_position['x'], my_position['y']]
+                        if motion_new[i][0] != motion_old[i][0]:
+                            depths[i] = cal_depth(motion_old[i], motion_new[i], yaw_flag)
+                            print(i, ' depth: ', depths[i])
+                        updates[i] = True
+    
+    # traffic lights
+    if depths[6] < depth_threshold:
+        free_time = True
+        t = time()
+        if tf_signal == 0:
+            speed = 0.0
+            sign_text = 'Red light! Stop!'
+            text_memo = sign_text
+        if tf_signal == 1:
+            speed = 0.0
+            sign_text = 'Yellow light! Wait!'
+            text_memo = sign_text
+        if tf_signal == 2:
+            speed = 0.3
+            sign_text = 'Green light! Go!'
+            text_memo = sign_text
+            depths[6] = math.inf
+
+    # stop sign
+    if depths[5] < depth_threshold:
+        t = time()
+        if not free_time:
+            free_time = True
+            t1 = time()
+        speed = 0.0
+        sign_text = 'Stop sign detected! Stop!'
+        text_memo = sign_text
+        if time() - t1 > 4:
+            speed = 0.3
+            depths[5] = math.inf
+    
+    # parking sign
+    if depths[2] < depth_threshold:
+        t = time()
+        if not free_time:
+            free_time = True
+            t1 = time()
+        speed = 0.0
+        sign_text = 'Parking sign detected! You can park!'
+        text_memo = sign_text
+        if time() - t1 > 4:
+            speed = 0.3
+            depths[2] = math.inf
+    
     # print(bno.getPitch())
     if bno.getPitch() < -0.146:
         sign_text = 'Ramp deteced! Uphilling!'
     if bno.getPitch() > 0.146:
         sign_text = 'Ramp deteced! Downhilling!'
 
-    if stop_sign:
-        speed = 0.0
-        sign_text = 'Stop sign detected! Stop!'
-
-    if tl_signal == 0:
-        speed = 0.0
-        sign_text = 'Red light! Stop!'
-    if tl_signal == 1:
-        speed = 0.0
-        sign_text = 'Yellow light! Wait!'
-    if tl_signal == 2:
-        speed = 0.3
-        sign_text = 'Green light! Go!'
-    
-    if priority_sign:
+    # priority sign
+    if depths[3] < depth_threshold:
+        free_time = True
+        t = time()
         sign_text = 'Priority sign detected! You can pass!'
+        text_memo = sign_text
+        depths[3] = math.inf
     
-    if roundabout_sign:
+    # roundabout sign
+    if depths[4] < depth_threshold:
+        free_time = True
+        t = time()
         sign_text = 'Roundabout sign detected!'
+        text_memo = sign_text
+        depths[4] = math.inf
     
-    if parking_sign:
-        speed = 0.2
-        sign_text = 'Parking sign detected! You can park!'
-    
-    if crosswalk_sign:
+    # crosswalk
+    if depths[0] < depth_threshold2:
         speed = 0.2
         sign_text = 'Crosswalk sign detected! Slow down!'
+        updates[0] = False
+        tics[0] = time()
     
-    if pedestrian:
-        speed = 0.0
-        sign_text = 'Pedestrian detected! Stop!'
+    # pedestrian
+    if obj_signals:
+        if obj_signals[1]:
+            speed = 0.0
+            sign_text = 'Pedestrian detected! Stop!'
+            depths[0] = math.inf
+            updates[0] = True
+            crosswalk = True
+        elif crosswalk:
+            depths[1] = math.inf
+            crosswalk = False
+            speed = 0.3
+            sign_text = ''
+    
+    if free_time:
+        if time() - t > 2:
+            sign_text = ''
+            free_time = False
+        else:
+            sign_text = text_memo
     
     if achieve_goal:
         sign_text = 'Target achieved! Engine stop!'
@@ -451,6 +542,7 @@ while 1:
     if sign_text:
         cv2.putText(image_copy,sign_text,(10,50),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2,cv2.LINE_AA)
     cv2.imshow("Driver View", image_copy)
+
     key = cv2.waitKey(1)
     if key == ord('q'):
         cv2.destroyAllWindows()

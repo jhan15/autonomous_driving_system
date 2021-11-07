@@ -32,6 +32,8 @@ def object_detection_process(sender, receiver):
     priority_sign = False
     roundabout_sign = False
     crosswalk_sign = False
+
+    h1 = None
     
     timer_start = None
     
@@ -47,88 +49,50 @@ def object_detection_process(sender, receiver):
     print("tlc loaded in sub process")
     
     while 1:
+        obj_signals = [None] * 7
+        obj_heights = [None] * 7
+        tf_signal = None
+
         img, speed = receiver.recv()
         od_image, od_cls, od_box = od.process_image(img)
 
         for (cls, box) in zip(od_cls, od_box):
             w, h, m = box[2]-box[0], box[3]-box[1], (box[0]+box[2])/2
             # print('class: {}, w: {}, h: {}, m: {}'.format(cls_dict[cls], w, h, m))
-            if cls == 1 and (w > 45 or h > 45):
-                if not crosswalk_sign:
-                    timer_start = time()
-                    crosswalk_sign = True
+            if cls == 1 and w > 30:
+                obj_heights[0] = h
+                obj_signals[0] = 1
             
             if cls == 7 and (w > 80 or h > 130) and 400 < m < 470:
-                if not pedestrian and pass_pedestrian:
-                    timer_start = time()
-                    crosswalk_sign = False
-                    pedestrian = True
-                    pass_pedestrian = False
+                obj_heights[1] = h
+                obj_signals[1] = 1
 
-            if cls == 6 and (w > 65 or h > 65) and od_cls.count(cls) == 2:
-                if not parking_sign:
-                    timer_start = time()
-                    parking_sign = True
+            if cls == 6 and w > 50:
+                if obj_heights[2] is None:
+                    obj_heights[2] = h
+                    obj_signals[2] = 1
+                elif w > obj_heights[2]:
+                    obj_heights[2] = h
 
-            if cls == 9 and (w > 75 or h > 75):
-                if not priority_sign:
-                    timer_start = time()
-                    priority_sign = True
+            if cls == 9 and w > 45:
+                obj_heights[3] = h
+                obj_signals[3] = 1
                 
-            if cls == 12 and (w > 70 or h > 70):
-                if not roundabout_sign:
-                    timer_start = time()
-                    roundabout_sign = True
+            if cls == 12 and w > 50:
+                obj_heights[4] = h
+                obj_signals[4] = 1
             
-            if cls == 13 and (w > 70 and h > 70):
-                if not stop_sign and pass_stop_sign:
-                    timer_start = time()
-                    stop_sign = True
-                    pass_stop_sign = False
+            if cls == 13 and w > 50:
+                obj_heights[5] = h
+                obj_signals[5] = 1
             
-            if cls == 14 and (w > 95 or h > 175):
-                if not traffic_lights:
-                    timer_start = time()
-                    pass_traffic_lights = False
-                
-                if not pass_traffic_lights:
-                    if tl_signal != 2:
-                        timer_start = time()
-                    
-                    traffic_lights = True
-                    roi = box
-                    roi_image = od_image[int(roi[1]):int(roi[3]),int(roi[0]):int(roi[2])]
-                    tl_signal = tlc.recognize_tf(roi_image)
-                    # print('...Traffic light signal: {}'.format(tl_signal))
+            if cls == 14 and w > 70:
+                obj_heights[6] = h
+                obj_signals[6] = 1
+                roi = box
+                roi_image = od_image[int(roi[1]):int(roi[3]),int(roi[0]):int(roi[2])]
+                tf_signal = tlc.recognize_tf(roi_image)
         
-        if crosswalk_sign and not pedestrian and time()-timer_start > 10:
-            crosswalk_sign = False
-        
-        if pedestrian and time()-timer_start > 8:
-            pedestrian = False
-        if not pass_pedestrian and time()-timer_start > 10:
-            pass_pedestrian = True
-        
-        if priority_sign and time()-timer_start > 2:
-            priority_sign = False
-        
-        if roundabout_sign and time()-timer_start > 2:
-            roundabout_sign = False
-        
-        if stop_sign and time()-timer_start > 4:
-            stop_sign = False
-        if not pass_stop_sign and time()-timer_start > 6:
-            pass_stop_sign = True
-        
-        if tl_signal == 2 and time()-timer_start > 2:
-            traffic_lights = False
-            pass_traffic_lights = True
-            tl_signal = None
-        
-        if parking_sign and time()-timer_start > 10:
-            parking_sign = False
-        
-        data = [crosswalk_sign, pedestrian, priority_sign, roundabout_sign,
-                stop_sign, tl_signal, parking_sign, od_image]
+        data = [obj_signals, obj_heights, tf_signal, od_image]
         
         sender.send(data)
