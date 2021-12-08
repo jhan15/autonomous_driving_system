@@ -1,7 +1,5 @@
-# ADS - BFMC
-Autonomous driving systems developed on a 1:10 scaling car and simulated in ROS.
-
-## Demo
+# autonomous_driving_system
+Autonomous driving system developed for BFMC2021. System is simulated in ROS and tested on a 1:10 scaling vehicle.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/62132206/139712662-ea3d87d7-a312-4bd8-9be8-56534e74adb9.gif?raw=true" width="600">
