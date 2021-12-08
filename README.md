@@ -1,9 +1,12 @@
 # autonomous_driving_system
-This repo is for the autonomous driving system (ADS) developed for BFMC2021. The ADS system is simulated in ROS and tested on a 1:10 scaling vehicle.
+This repo is for the autonomous driving system (ADS) developed for BFMC2021. The system is simulated in ROS and tested on a 1:10 scaling vehicle.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/62132206/139712662-ea3d87d7-a312-4bd8-9be8-56534e74adb9.gif?raw=true" width="600">
 </p>
+
+## System architecture
+
 
 ## System setup
 ### 1. Hierarchy overview
