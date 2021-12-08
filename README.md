@@ -7,6 +7,15 @@ This repo is for the autonomous driving system (ADS) developed for BFMC2021. The
 
 ## System architecture
 
+    ADS
+      |__ Input layer
+      |__ Planning layer
+      |__ Localization layer
+      |__ Perception layer
+      |__ Decision-making layer
+      |__ Control layer
+      |__ Output layer
+
 
 ## System setup
 ### 1. Hierarchy overview
