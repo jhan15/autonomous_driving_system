@@ -15,6 +15,11 @@ This repo is for the autonomous driving system (ADS) developed for BFMC2021. The
       |__ Decision-making layer
       |__ Control layer
       |__ Output layer
+      
+## Tech solutions
+
+### Object detection
+We used [yolov5](https://github.com/ultralytics/yolov5) architecture to train a model on a self-collected dataset. The model can detect 15 classes of objects, including car, pedestrian, traffic light, and different traffic signs.
 
 
 ## System setup
