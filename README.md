@@ -15,18 +15,15 @@ This repo is for the autonomous driving system (ADS) developed for BFMC2021. The
       |__ Decision-making layer
       |__ Control layer
       |__ Output layer
-      
-## Tech solutions
 
-### Object detection
+## Object detection
 We used [yolov5](https://github.com/ultralytics/yolov5) architecture to train a model on a self-collected dataset. The model can detect 15 classes of objects, including car, pedestrian, traffic light, and different traffic signs. Best mAP@.5 = 87.2%.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/62132206/145183769-7e5bf5e9-d248-4978-82d3-51ca32b87a84.png?raw=true" width="600">
 </p>
 
-
-## System setup
+## System setup in ROS
 ### 1. Hierarchy overview
 
     ~/Documents
@@ -37,7 +34,8 @@ We used [yolov5](https://github.com/ultralytics/yolov5) architecture to train a 
 ### 2. Installation
 
 #### Install basic Python3 packages and virtual environment
-    
+
+```bash
     # requires python3.8 or later installed in default system
     $ sudo apt-get install python-catkin-tools python3-dev python3-numpy
     $ sudo pip install virtualenv
@@ -46,6 +44,7 @@ We used [yolov5](https://github.com/ultralytics/yolov5) architecture to train a 
     $ cd python3_ws
     $ virtualenv py3venv --python=python3.8
     $ source ~/Documents/python3_ws/py3venv/bin/activate
+```
 
 #### Install yolov5 and its dependencies
 
